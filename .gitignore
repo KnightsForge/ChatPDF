@@ -1,0 +1,5 @@
+.env
+.idea/
+uploads/*.pdf
+!uploads/
+chroma_db/

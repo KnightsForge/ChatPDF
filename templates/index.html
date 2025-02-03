@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Your PDFs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Chat with Your PDFs 📄💬</h1>
+
+        <!-- File Upload Section -->
+        <div class="mb-3">
+            <label for="pdfUpload" class="form-label">Upload PDF Documents</label>
+            <input class="form-control" type="file" id="pdfUpload" multiple>
+            <button class="btn btn-primary mt-2" onclick="uploadPDF()">Upload</button>
+        </div>
+
+        <!-- Query Section -->
+        <div class="mb-3">
+            <label for="queryInput" class="form-label">Ask a Question</label>
+            <input type="text" class="form-control" id="queryInput" placeholder="Enter your query...">
+            <button class="btn btn-success mt-2" onclick="searchQuery()">Search</button>
+        </div>
+
+        <!-- Response Section -->
+        <div id="responseContainer" class="mt-4"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = "http://127.0.0.1:5000";
+
+        function uploadPDF() {
+            let files = document.getElementById('pdfUpload').files;
+            if (files.length === 0) {
+                alert("Please select at least one PDF file.");
+                return;
+            }
+
+            let formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append("file", files[i]);
+            }
+
+            fetch(`${BACKEND_URL}/upload`, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => alert("Upload Successful!"))
+            .catch(error => alert("Upload Failed!"));
+        }
+
+        function searchQuery() {
+            let query = document.getElementById('queryInput').value;
+            if (!query) {
+                alert("Please enter a query.");
+                return;
+            }
+
+            fetch(`${BACKEND_URL}/query`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let responseHTML = `<h3>Response:</h3><p>${data.response}</p>`;
+                responseHTML += `<h4>Sources:</h4>`;
+                data.source.forEach(src => {
+                    responseHTML += `<p>📄 <strong>${src.pdf_name}</strong> (Page ${src.page})</p>`;
+                });
+                document.getElementById('responseContainer').innerHTML = responseHTML;
+            })
+            .catch(error => alert("Query Failed!"));
+        }
+    </script>
+</body>
+</html>
