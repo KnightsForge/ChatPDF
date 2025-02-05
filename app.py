@@ -7,7 +7,7 @@ import google.generativeai as genai
 from sentence_transformers import SentenceTransformer
 
 # Configure Google Gemini API
-genai.configure(api_key="AIzaSyBVUwbfrssD8Qg3K2SWCdHhMtZw5YHJSmI")
+genai.configure(api_key="Your-API-Key")
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 app = Flask(__name__)
