@@ -5,16 +5,15 @@ import hashlib
 from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 from sentence_transformers import SentenceTransformer
+import os
 
-# Configure Google Gemini API
-genai.configure(api_key="Your-API-Key")
+API_KEY = os.environ['GEMINI_API_KEY']
+genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-# Load Sentence Transformer for embeddings
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Initialize ChromaDB
