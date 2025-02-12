@@ -33,6 +33,12 @@ def extract_text_from_pdf(pdf_path):
         texts.append((page_num + 1, text))  # Store page number with text
     return texts
 
+@app.route("/clear_db", methods=["POST"])
+def clear_db():
+    """Clears all documents from the ChromaDB collection."""
+    chroma_client.delete_collection(name="pdf_chunks")
+    collection = chroma_client.get_or_create_collection(name="pdf_chunks")
+    return jsonify({"message": "Database cleared successfully"})
 
 def store_pdf_in_chromadb(pdf_path, pdf_name):
     """Stores PDF content as embeddings in ChromaDB."""

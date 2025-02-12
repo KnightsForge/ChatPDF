@@ -25,6 +25,11 @@
             <button class="btn btn-success mt-2" onclick="searchQuery()">Search</button>
         </div>
 
+        <!-- Clear Database Section -->
+        <div class="mb-3">
+            <button class="btn btn-danger mt-2" onclick="clearDatabase()">Clear Database</button>
+        </div>
+
         <!-- Response Section -->
         <div id="responseContainer" class="mt-4"></div>
     </div>
@@ -75,6 +80,15 @@
                 document.getElementById('responseContainer').innerHTML = responseHTML;
             })
             .catch(error => alert("Query Failed!"));
+        }
+
+        function clearDatabase() {
+            fetch(`${BACKEND_URL}/clear_db`, {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => alert("Failed to clear database!"));
         }
     </script>
 </body>
